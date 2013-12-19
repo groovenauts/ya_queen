@@ -7,10 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = "ya_queen"
   spec.version       = YaQueen::VERSION
   spec.authors       = ["akima"]
-  spec.email         = ["akm2000@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.email         = ["akima@groovenauts.jp"]
+  spec.description   = %q{ya_queen supports to define complicated capistrano tasks and roles}
+  spec.summary       = %q{ya_queen supports to define complicated capistrano tasks and roles}
+  spec.homepage      = "https://github.com/groovenauts/ya_queen"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
