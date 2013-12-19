@@ -6,7 +6,7 @@ module YaQueen
 
   class << self
     def configure(context, path)
-      config = self.new(context, path)
+      config = Config.new(context, path)
       yield(config) if block_given?
       config
     end
