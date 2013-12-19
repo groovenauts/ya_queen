@@ -1,6 +1,6 @@
 # YaQueen
 
-TODO: Write a gem description
+ya_queen supports to define complicated capistrano tasks and roles
 
 ## Installation
 
