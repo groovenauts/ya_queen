@@ -1,0 +1,21 @@
+default: &default
+  user: 'op1'
+  repository: "git@github.com:groovenauts/ya_queen.git"
+
+api_server:
+  <<: *default
+  deploy_to: '/srv/ya_queen/api_server'
+  servers:
+    api_server01:
+      no: 1
+    api_server02:
+      no: 2
+
+backend:
+  <<: *default
+  deploy_to: '/srv/ya_queen/backend'
+  servers:
+    backend01:
+      no: 1
+    backend02:
+      no: 2
