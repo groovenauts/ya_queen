@@ -5,6 +5,7 @@ module YaQueen
   class Base
     attr_reader :context, :name, :config, :root, :servers
     def initialize(context, name, configs)
+      raise ArgumentError, "name must be given" if name.nil? || name.empty? || (name =~ /\A\@\s*\Z/)
       @context = context
       @name = name
       @root = configs
@@ -29,15 +30,17 @@ module YaQueen
 
     def define_tasks
       return if servers.nil? or servers.empty?
-
       define_role_task
+      define_each_tasks
+      define_common_task
+    end
 
+    def define_each_tasks
       servers.each do |host, options|
         after :"@#{name}", :"@#{name}/#{host}"
         define_each_task(host, options)
         after :"@#{name}/#{host}", :"@#{name}/common"
       end
-      define_common_task
     end
 
     def role_task(&block)  ; @role_task   = block; end
@@ -57,7 +60,7 @@ module YaQueen
       t = self
       task(:"@#{name}/common") do
         t.implement_common_task
-        t.set_deploy_target("@#{name}")
+        t.set_deploy_target("@#{t.name}")
       end
     end
 
@@ -76,7 +79,7 @@ module YaQueen
       when tgt
         # OK, do nothing
       else
-        raise "already selected deploy target: #{selected}"
+        raise "#{tgt} given but already selected deploy target: #{selected}"
       end
     end
   end
