@@ -30,27 +30,42 @@ module YaQueen
     def define_tasks
       return if servers.nil? or servers.empty?
 
-      t = self
-      task(:"@#{name}"){ t.define_role_task }
+      define_role_task
 
       servers.each do |host, options|
         after :"@#{name}", :"@#{name}/#{host}"
-        task( :"@#{name}/#{host}"){ t.define_each_task(host, options) }
+        define_each_task(host, options)
         after :"@#{name}/#{host}", :"@#{name}/common"
       end
-      task(:"@#{name}/common") do
-        t.define_common_task
-        t.set_deploy_target("@#{name}")
-      end
+      define_common_task
     end
 
     def role_task(&block)  ; @role_task   = block; end
     def common_task(&block); @common_task = block; end
     def each_task(&block)  ; @each_task   = block; end
 
-    def define_role_task  ; @role_task.call if @role_task; end
-    def define_common_task; @common_task.call if @common_task; end
-    def define_each_task(host, options); @each_task.call(host, options) if @each_task; end
+    def implement_role_task  ; @role_task.call if @role_task; end
+    def implement_common_task; @common_task.call if @common_task; end
+    def implement_each_task(host, options); @each_task.call(host, options) if @each_task; end
+
+    def define_role_task
+      t = self
+      task(:"@#{name}"){ t.implement_role_task }
+    end
+
+    def define_common_task
+      t = self
+      task(:"@#{name}/common") do
+        t.implement_common_task
+        t.set_deploy_target("@#{name}")
+      end
+    end
+
+    def define_each_task(host, options)
+      t = self
+      task( :"@#{name}/#{host}"){ t.implement_each_task(host, options) }
+    end
+
 
     ## デプロイ先サーバ・ディレクトリ選択時に異なる種類のデプロイ対象を選択できないようにする
     ## (cap vagrant @apisrv-a01 @gotool01 deploy:update などをできないようにする)
