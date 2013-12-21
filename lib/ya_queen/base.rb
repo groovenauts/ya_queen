@@ -3,13 +3,14 @@ require 'ya_queen'
 
 module YaQueen
   class Base
-    attr_reader :context, :name, :config, :root, :servers
+    attr_reader :context, :name, :config, :root, :servers, :root_dir
     def initialize(context, name, configs)
       raise ArgumentError, "name must be given" if name.nil? || name.empty? || (name =~ /\A\@\s*\Z/)
       @context = context
       @name = name
       @root = configs
       @config = configs[name.to_sym] || configs[name.to_s]
+      @root_dir = @config[:root_dir]
       @servers = @config["servers"] || {}
       if s = @config["server"]
         @servers[s] = {}
